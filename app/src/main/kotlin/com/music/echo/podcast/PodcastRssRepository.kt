@@ -27,7 +27,7 @@ data class PodcastFeed(
 
 class PodcastRssRepository {
   suspend fun load(feedUrl: String): PodcastFeed = withContext(Dispatchers.IO) {
-    require(URL(feedUrl).protocol == "https") { "Podcast feeds must use HTTPS" }
+    require(URL(feedUrl).protocol in listOf("https", "http")) { "Enter a valid HTTP(S) podcast RSS URL" }
     val connection = URL(feedUrl).openConnection() as HttpURLConnection
     connection.connectTimeout = 12_000
     connection.readTimeout = 20_000
@@ -35,7 +35,7 @@ class PodcastRssRepository {
     connection.setRequestProperty("User-Agent", "Streamer/1.0 (podcast RSS reader)")
     try {
       require(connection.responseCode in 200..299) { "RSS request failed: ${connection.responseCode}" }
-      require(connection.contentLengthLong <= 5_000_000L) { "RSS feed too large" }
+      require(connection.contentLengthLong <= 10_000_000L) { "RSS feed too large" }
       connection.inputStream.buffered().use { input ->
         val parser = Xml.newPullParser()
         parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false)
@@ -64,7 +64,7 @@ class PodcastRssRepository {
               "enclosure" -> if (inItem) {
                 val url = parser.getAttributeValue(null, "url").orEmpty()
                 val type = parser.getAttributeValue(null, "type").orEmpty()
-                if (url.startsWith("https://") && (type.startsWith("audio/") || type.isBlank())) audio = url
+                if ((url.startsWith("https://") || url.startsWith("http://")) && (type.startsWith("audio/") || type.isBlank())) audio = url
               }
               "itunes:image" -> if (!inItem) {
                 feedImage = parser.getAttributeValue(null, "href") ?: feedImage
