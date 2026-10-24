@@ -843,6 +843,7 @@ class MainActivity : ComponentActivity() {
           listOf(
             Screens.Home.route,
             Screens.Library.route,
+            Screens.Podcasts.route,
             Screens.ListenTogether.route,
             "settings",
           )
@@ -1146,7 +1147,8 @@ class MainActivity : ComponentActivity() {
 
         val currentTitle =
           when (navBackStackEntry?.destination?.route) {
-            Screens.Home.route -> "Echo Music"
+            Screens.Home.route -> "Streamer"
+            Screens.Podcasts.route -> "Podcasts"
             Screens.Search.route -> stringResource(R.string.search)
             Screens.Library.route -> stringResource(R.string.filter_library)
             Screens.ListenTogether.route -> stringResource(R.string.together)
