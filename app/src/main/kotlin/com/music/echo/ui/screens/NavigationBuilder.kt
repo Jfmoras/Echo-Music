@@ -1,5 +1,6 @@
 package echo.music.iad1tya.ui.screens
 
+import echo.music.iad1tya.podcast.PodcastScreen
 import android.app.Activity
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -77,6 +78,8 @@ fun NavGraphBuilder.navigationBuilder(
   composable(Screens.Home.route) {
     HomeScreen(navController = navController, snackbarHostState = snackbarHostState)
   }
+
+  composable(Screens.Podcasts.route) { PodcastScreen() }
 
   composable(Screens.Search.route) {
     val pureBlackEnabled by rememberPreference(PureBlackKey, defaultValue = false)
