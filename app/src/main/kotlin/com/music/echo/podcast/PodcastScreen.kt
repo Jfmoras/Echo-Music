@@ -46,7 +46,7 @@ fun PodcastScreen(modifier: Modifier = Modifier) {
     verticalArrangement = Arrangement.spacedBy(12.dp)
   ) {
     Text("Podcasts", style = MaterialTheme.typography.headlineMedium)
-    Text("Listen to open RSS podcasts without an account or in-app advertisements.")
+    Text("Enter the RSS URL of a podcast to load its episodes. Spotify show page links are not RSS feeds.")
     OutlinedTextField(
       value = feedUrl,
       onValueChange = { feedUrl = it },
@@ -55,7 +55,7 @@ fun PodcastScreen(modifier: Modifier = Modifier) {
       singleLine = true
     )
     Button(
-      enabled = !loading && feedUrl.startsWith("https://"),
+      enabled = !loading && feedUrl.trim().let { it.startsWith("https://") || it.startsWith("http://") },
       onClick = {
         scope.launch {
           loading = true
